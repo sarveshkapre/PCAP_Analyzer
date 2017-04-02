@@ -2,9 +2,9 @@
 from scapy.all import *
 
 # Change the path of the output file according to your system
-Windows_OS = "C:/Users/sarve/Desktop/pcaps/Windows_OS.txt"
+Windows_OS = "C:/../../../../Windows_OS.txt"
 # Change the location of pcap file where you have stored it on your PC
-pcap_file = "C:/Users/sarve/Desktop/pcaps/http_google.pcap"
+pcap_file = "C:/../../../../http_google.pcap"
 
 f1 = open(Windows_OS, 'a+')
 
