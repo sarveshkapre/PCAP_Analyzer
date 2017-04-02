@@ -1,19 +1,19 @@
 # PCAP_Analyzer
 ----------------
-| REQUIREMENTS |
+ REQUIREMENTS 
 ----------------
 1. Python 3.X
 2. Scapy-python-3 module
 
 --------------
-| MOTIVATION |
+ MOTIVATION 
 --------------
 1. Understand how scapy can be used to interpret pcap files.
 2. Explore and experiment different functions in Scapy.
 3. Find out the OS from pcap packet content using different approach as given below.
 
 -----------------------
-| HIGH LEVEL APPROACH |
+ HIGH LEVEL APPROACH 
 -----------------------
 There are some signs to find the OS, but none of them are 100% reliable.
 Look for 
@@ -25,7 +25,7 @@ Look for
 6. IP ID and how it changes. There are difference of ID between different OSes
 
 -----------------------------
-| APPROACH FOR OS DETECTION |
+ APPROACH FOR OS DETECTION 
 -----------------------------
 1. Extract GET/POST Request.
 2. Look for User-Agent string in HTTP Headers
