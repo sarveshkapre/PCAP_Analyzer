@@ -1,0 +1,150 @@
+from scapy.all import *
+
+pcap_file = "C:/Users/sarve/Desktop/pcaps/SSHv2.cap"
+
+a = rdpcap(pcap_file)
+
+x = 0
+while x < len(a):
+    # Checking for FTP, SSH, Telnet, SMTP, HTTP, HTTPS, RIP, LDAP, NetBios, SNMP, BGP, SMB, DHCP, TACACS, Kerberos, SQL Service
+    # SNMP Trap(162), RPC(530), SIP (5060,5061), ARP, CDP
+    raw_packet = str(a[x].summary())
+    # print(raw_packet)
+    info_sport = str(a[x][TCP].sport)
+    info_dport = str(a[x][TCP].dport)
+
+    if info_sport == "21" or info_dport == "21":
+        print("FTP protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "22" or info_dport == "22":
+        print("SSH protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+        # print(hexdump(a[x]))
+        # print(a[x].show())
+
+    elif info_sport == "23" or info_dport == "23":
+        print("Telnet protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "25" or info_dport == "25":
+        print("SMTP protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "80" or info_dport == "80":
+        print("HTTP protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "443" or info_dport == "443":
+        print("HTTPS protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "389" or info_dport == "389":
+        print("LDAP protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "636" or info_dport == "636":
+        print("LDAP on SSL protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "520" or info_dport == "520":
+        print("RIP protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "137" or info_dport == "137":
+        print("NETBios Name Service (NBNS) protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "139" or info_dport == "139":
+        print("NETBios Datagram Service (NBDS) protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "161" or info_dport == "161":
+        print("SNMP protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "179" or info_dport == "179":
+        print("BGP protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "445" or info_dport == "445":
+        print("SMB protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "67" or info_dport == "67":
+        print("DHCP protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "68" or info_dport == "68":
+        print("DHCP protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "49" or info_dport == "49":
+        print("TACACS protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "88" or info_dport == "88":
+        print("Kerberos protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "156" or info_dport == "156":
+        print("SQL Service is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "162" or info_dport == "162":
+        print("SNMP Trap protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "49" or info_dport == "49":
+        print("TACACS protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "530" or info_dport == "530":
+        print("RPC protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "5060" or info_dport == "5060":
+        print("SIP (non-encrypted) protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    elif info_sport == "5061" or info_dport == "5061":
+        print("SIP (encrypted) protocol is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    n = raw_packet.find("ARP")
+    if n > 0:
+        print("ARP is used by")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    n = raw_packet.find("CDP")
+    if n > 0:
+        print("CDP is used by the CISCO device")
+        print(a[x][IP].src)
+        print(a[x][IP].dst)
+
+    x += 1
