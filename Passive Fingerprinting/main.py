@@ -2,9 +2,9 @@
 from scapy.all import *
 
 # Change the path of the output file according to your system
-home1 = "C:/Users/sarve/Desktop/pcaps/home1.txt"
+home1 = "C:/../../../../home1.txt"
 # Change the location of pcap file where you have stored it on your PC
-pcap_file = "C:/Users/sarve/Desktop/pcaps/home1.pcapng"
+pcap_file = "C:/../../../home1.pcapng"
 
 f1 = open(home1, 'w+')
 
