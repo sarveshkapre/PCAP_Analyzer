@@ -2,7 +2,7 @@
 from scapy.all import *
 
 # Change the path of the output file according to your system
-MAC_OS_X = "C:/../../../pcaps/MAC_OS_X.txt"
+MAC_OS_X = "C:/../../../MAC_OS_X.txt"
 # Change the location of pcap file where you have stored it on your PC
 pcap_file = "C:/../../../sample.pcapng"
 
