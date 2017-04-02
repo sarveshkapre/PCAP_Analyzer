@@ -15,7 +15,6 @@ b.	MAC
 9.	TTL: 61 and OS is Linux, then there maybe 3 hops as TTL for Linux is 64
 
 TO BE DONE
-> save content in a file to current directory and use time function to name the file
 > Process the file to remove recurring data
 > categorize IP as local external multicast and broadcast
 > Map of devices
@@ -117,7 +116,7 @@ class PcapAnalyzer:
 
         ftypes = [('All file', "*.*")]
         ttl = "Title"
-        dir1 = 'C:\\Users\sarve\Desktop\pcaps'
+        dir1 = 'C:\\'
         root.fileName = askopenfilename(filetypes=ftypes, initialdir=dir1, title=ttl)
 
 
@@ -130,11 +129,10 @@ def analyzepcap():
 
     #Read a pcap file by adding the path of the file below.
     # Enter proper extension - pcap files have - cap, pcap, pcapng etc.
-    #pcap_file = "C:/Users/sarve/Desktop/pcaps/telnet.cap"
     pcap_file = root.fileName
     # Create a file and add date and time to it
     # Replace the file extnesion .csv to any that you want . for example ->   .txt
-    filename = 'C:/Users/sarve/Desktop/pcaps/pcapfile-%s.txt'%datetime.now().strftime('%Y-%m-%d_%H_%M')
+    filename = 'C:/../../../pcapfile-%s.txt'%datetime.now().strftime('%Y-%m-%d_%H_%M')
     f1 = open(filename, 'w+')
 
     try:
