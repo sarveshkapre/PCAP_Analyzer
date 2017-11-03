@@ -1,0 +1,176 @@
+#!/usr/bin/python
+
+from scapy.all import *
+from colorama import Fore, Back, init
+import impacket
+import re
+import datetime
+import sys
+import argparse
+init(autoreset=True)
+
+# List of common IP protocols
+
+IPProtocols = {
+                0: 'IP', 1: 'ICMP', 2: 'IGMP', 3: 'GGP', 4: 'IP-ENCAP', 56: 'TLSP', 133: 'FC', 6: 'TCP', 8: 'EGP', 137: 'MPLS-IN-IP',
+                138: 'MANET', 139: 'HIP', 12: 'PUP', 17: 'UDP', 20: 'HMP', 22: 'XNS-IDP', 132: 'SCTP', 27: 'RDP', 29: 'ISO-TP4',
+                5: 'ST', 36: 'XTP', 37: 'DDP', 38: 'IDPR-CMTP', 41: 'IPV6', 43: 'IPV6-ROUTE', 44: 'IPV6-FRAG', 45: 'IDRP',
+                46: 'RSVP', 47: 'GRE', 136: 'UDPLITE', 50: 'IPSEC-ESP', 51: 'IPSEC-AH', 9: 'IGP', 57: 'SKIP', 58: 'IPV6-ICMP',
+                59: 'IPV6-NONXT', 60: 'IPV6-OPTS', 73: 'RSPF', 81: 'VMTP', 88: 'EIGRP', 89: 'OSPFIGP', 93: 'AX.25', 94: 'IPIP',
+                97: 'ETHERIP', 98: 'ENCAP', 103: 'PIM', 108: 'IPCOMP', 112: 'VRRP', 115: 'L2TP', 124: 'ISIS'
+              }
+
+# List of common TCP port numbers to find out running services
+
+TCPPorts = {
+            20: 'FTP', 21: 'FTP', 22: 'SSH', 23: 'TELNET', 25: 'SMTP', 80: 'HTTP', 443: 'HTTPS', 389: 'LDAP', 636: 'LDAPssl',
+            137: 'NetBIOS Name Service NBNS', 138: "NetBios Datagram Service NBDS", 520: 'RIP', 161: 'SNMP', 179: 'BGP',
+            445: 'SMB', 67: 'DHCP Bootpc', 68: 'DHCP Bootps', 49: 'TACACS', 88: 'Kerberos', 156: 'SQL Service', 162: 'SNMP Trap',
+            530: 'RPC', 5060: 'SIP non encrypted', 5061: 'SIP encrypted'
+            }
+
+pcap_file = raw_input(Fore.CYAN + "Enter the absolute path of pcap/pcapng file:\n")
+
+try:
+    #Read a pcap file and store it in variable a
+    packets = rdpcap(str(pcap_file))
+
+except Exception as e:
+    print(Fore.RED + 'Something went wrong while opening/reading the pcap file.' '\n\nThe error message is: %s' % e)
+    exit(0)
+
+x = 1
+while x <= len(packets):
+    raw_packet = str(packets[x].summary())
+    if raw_packet.count("IP") > 0:
+        raw_packet = str(packets[x].command())
+        if raw_packet.count("IPv6") > 0:
+            pass
+        else:
+            if raw_packet.count("proto") > 0:
+                IPnum = packets[x][IP].proto
+
+            list = []
+            list.append("| PACKET " + str(x + 1) + " |   ")
+            list.append("\n")
+
+            if raw_packet.count("src") > 0:
+                list.append("Source IP: " + str(packets[x][IP].src) + "    ")
+            if raw_packet.count("dst") > 0:
+                list.append("Destination IP: " + str(packets[x][IP].dst) + "    ")
+            list.append("\n")
+            _dict_value = IPnum in IPProtocols.keys()
+            # print(_dict_value)
+            if _dict_value is True:
+                list.append("Protocol: " + str(IPProtocols[IPnum]) + "    ")
+
+            if raw_packet.count("version") > 0:
+                list.append("IP version: " + str(packets[x][IP].version) + "    ")
+            list.append("\n")
+
+            if raw_packet.count("dst") > 0:
+                list.append("Dest MAC: " + str(packets[x][Ether].dst) + "    ")
+
+            if raw_packet.count("src") > 0:
+                list.append("Src MAC: " + str(packets[x][Ether].src) + "    ")
+            list.append("\n")
+
+            # Few packets does not have source and destination port numbers. Hence we check it here before calculating.
+            # Else it will trigger an error
+            if raw_packet.count("sport") > 0:
+                list.append("Source Port: " + str(packets[x][IP].sport) + "    ")
+                port_info = packets[x][IP].sport
+                # print(p)
+                # Port number information is available in the dictionary.
+                # It will lookup to find right service information
+                # Check whether value exists in dictionary
+                _dict_value = port_info in TCPPorts.keys()
+                # print(_dict_value)
+                if _dict_value is True:
+                    list.append(str(TCPPorts[port_info]) + " service is running    ")
+
+            if raw_packet.count("dport") > 0:
+                list.append("Destination Port: " + str(packets[x][IP].dport) + "    ")
+                port_info = packets[x][IP].dport
+                # Port number information is available in the dictionary.
+                # It will lookup to find right service information
+                # Check whether value exists in dictionary
+                _dict_value = port_info in TCPPorts.keys()
+                # print(_dict_value)
+                if _dict_value is True:
+                    list.append(str(TCPPorts[port_info]) + " service is running    ")
+            list.append("\n")
+            # Calculate the TTL
+            list.append("TTL: " + str(packets[x][IP].ttl) + "    ")
+            list.append("\n")
+
+            if raw_packet.count("Mac OS X") > 0:
+                n = raw_packet.find("Mac OS X")
+                m = n + 17
+                version = raw_packet[n:m]
+                list.append("Operating System Details- Name: MAC OS X,  MAC Operating Version: " + version + "    ")
+
+            if raw_packet.count("Windows") > 0:
+                n = raw_packet.find("USER-AGENT")
+                m = raw_packet.find("\n")
+                Details = raw_packet[n:m]
+                list.append("Details: " + Details + "Windows Operating system     ")
+
+            n = raw_packet.find("CDP")
+            if n > 0:
+                list.append("CDP is used by the CISCO device   ")
+
+            # List displays in an array format. Hence we join to remove unrequired characters
+            modifylist = ''.join(list)
+            print Back.BLACK + Fore.CYAN + modifylist
+
+    # Router communication involves sending ARP request
+    if raw_packet.count("ARP") > 0:
+        raw_packet = str(packets[x].command())
+        # print(raw_packet)
+        # All the packet information will be stored in the list
+        list = []
+        list.append("| PACKET " + str(x + 1) + " |   ")
+        try:
+            n = raw_packet.find("ARP")
+            m = raw_packet.find("op=2")
+            o = raw_packet.find("Padding")
+            if n > 0 and m > 0 and o > 0:
+                list.append("Mac address of router: " + str(packets[x][ARP].hwsrc) + "    ")
+                list.append("IP address of router: " + str(packets[x][ARP].psrc) + "    ")
+                list.append("\n")
+        except Exception as e:
+            print("")
+
+        # Checking for SNMP manager and its details
+        if raw_packet.find("SNMP") > 0:
+            prot = str(packets[x][UDP].dport)
+            if prot == "161":
+                list.append("SNMP Manager details " + str(packets[x][IP].src) + str(packets[x][IP].dst) + "    ")
+                list.append("\n")
+        # List displays in an array format. Hence we join to remove unrequired characters
+        modifylist = ''.join(list)
+        print Back.BLACK + Fore.CYAN + modifylist
+
+    # Login to idenitfy if there are Cisco Network Switch in the pcap file
+
+    raw_packet = str(packets[x].command())
+    if raw_packet.count("Cisco") > 0:
+        v = str(packets[x][Raw].command())
+        s = str(packets[x][Raw].command())
+        # print(raw_packet)
+        # All the packet information will be stored in the list
+        list = []
+        list.append("| PACKET " + str(x + 1) + " |   ")
+        n = v.find("Cisco")
+        data = v[n:]
+        list.append(data + "    ")
+        if s.count("Switch") > 0:
+            list.append("   The device is a SWITCH   ")
+        list.append("MAC address of Device: " + str(packets[x][Dot3].src) + "    ")
+        list.append("\n")
+        # List displays in an array format. Hence we join to remove unrequired characters
+        modifylist = ''.join(list)
+        print Back.BLACK + Fore.GREEN + modifylist
+    # Move to next packet
+    x += 1
