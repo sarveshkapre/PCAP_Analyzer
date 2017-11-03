@@ -7,7 +7,22 @@ import re
 import datetime
 import sys
 import argparse
+import os
+
+os.system('clear')
 init(autoreset=True)
+
+print "\n\n\n"
+print Fore.BLUE + "8888888b.   .d8888b.         d8888 8888888b.             d8888 888b    888        d8888 888      Y88b   d88P 8888888888P 8888888888 8888888b."
+print Fore.BLUE + "888   Y88b d88P  Y88b       d88888 888   Y88b           d88888 8888b   888       d88888 888       Y88b d88P        d88P  888        888   Y88b"
+print Fore.BLUE + "888    888 888    888      d88P888 888    888          d88P888 88888b  888      d88P888 888        Y88o88P        d88P   888        888    888"
+print Fore.BLUE + "888   d88P 888            d88P 888 888   d88P         d88P 888 888Y88b 888     d88P 888 888         Y888P        d88P    8888888    888   d88P"
+print Fore.BLUE + "8888888P   888           d88P  888 8888888P          d88P  888 888 Y88b888    d88P  888 888          888        d88P     888        8888888P"
+print Fore.BLUE + "888        888    888   d88P   888 888              d88P   888 888  Y88888   d88P   888 888          888       d88P      888        888 T88b"
+print Fore.BLUE + "888        Y88b  d88P  d8888888888 888             d8888888888 888   Y8888  d8888888888 888          888      d88P       888        888  T88b"
+print Fore.BLUE + "888          Y8888P   d88P     888 888            d88P     888 888    Y888 d88P     888 88888888     888     d8888888888 8888888888 888   T88b"
+print "\n\n"
+
 
 # List of common IP protocols
 
@@ -30,7 +45,7 @@ TCPPorts = {
             }
 
 pcap_file = raw_input(Fore.CYAN + "Enter the absolute path of pcap/pcapng file:\n")
-
+print "\n\n"
 try:
     #Read a pcap file and store it in variable a
     packets = rdpcap(str(pcap_file))
@@ -122,7 +137,7 @@ while x <= len(packets):
 
             # List displays in an array format. Hence we join to remove unrequired characters
             modifylist = ''.join(list)
-            print Back.BLACK + Fore.CYAN + modifylist
+            print Fore.CYAN + modifylist
 
     # Router communication involves sending ARP request
     if raw_packet.count("ARP") > 0:
@@ -150,7 +165,7 @@ while x <= len(packets):
                 list.append("\n")
         # List displays in an array format. Hence we join to remove unrequired characters
         modifylist = ''.join(list)
-        print Back.BLACK + Fore.CYAN + modifylist
+        print Fore.CYAN + modifylist
 
     # Login to idenitfy if there are Cisco Network Switch in the pcap file
 
@@ -171,6 +186,6 @@ while x <= len(packets):
         list.append("\n")
         # List displays in an array format. Hence we join to remove unrequired characters
         modifylist = ''.join(list)
-        print Back.BLACK + Fore.GREEN + modifylist
+        print Fore.GREEN + modifylist
     # Move to next packet
     x += 1
