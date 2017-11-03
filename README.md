@@ -1,9 +1,4 @@
 # PCAP_Analyzer
-----------------
- REQUIREMENTS 
-----------------
-1. Python 3.X
-2. Scapy-python-3 module
 
 --------------
  MOTIVATION 
